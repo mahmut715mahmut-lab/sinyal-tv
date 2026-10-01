@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #0B0B0D;
+    --surface-primary: #121214;
+    --surface-secondary: #18181B;
+    --surface-tertiary: #202024;
+    --surface-elevated: #27272A;
+    --border-subtle: #27272A;
+    --border-muted: #1F1F23;
+    --text-primary: #F4F4F5;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --live-red: #EF4444;
+    --accent-red: #DC2626;
+  }
+
+  * {
+    border-color: var(--border-subtle);
+  }
+
+  body {
+    background-color: #0B0B0D;
+    color: #F4F4F5;
+    font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar for dark TV interface */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0B0B0D;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #27272A;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3F3F46;
+  }
+}
+
+/* Restrained animations */
+@keyframes pulseLive {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+}
+
+.animate-live-pulse {
+  animation: pulseLive 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Subtle line clamp helper */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
