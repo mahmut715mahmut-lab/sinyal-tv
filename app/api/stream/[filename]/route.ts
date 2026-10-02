@@ -16,6 +16,16 @@ const EXACT_ASSET_MAP: Record<string, string> = {
   'FINAL.mp4': 'FINAL.mp4',
   'WhatsApp Video 2026-09-30 at 17.31.13.mp4': 'WhatsApp.Video.2026-09-30.at.17.31.13.mp4',
   'daha açı 1. bölüm.mp4': 'WhatsApp.Video.2026-09-30.at.17.31.13.mp4',
+  '1. bölüm U12 İKSİRİ.mp4': '1.bolum.U12.IKSIRI.mp4',
+  '2. bölüm U12 İKSİRİ.mp4': '2.bolum.U12.IKSIRI.mp4',
+  '3. bölüm U12 İKSİRİ.mp4': '3.bolum.U12.IKSIRI.mp4',
+  '4. bölüm U12 İKSİRİ.mp4': '4.bolum.U12.IKSIRI.mp4',
+  '5. bölüm U12 İKSİRİ.mp4': '5.bolum.U12.IKSIRI.mp4',
+  '6. bölüm U12 İKSİRİ.mp4': '6.bolum.U12.IKSIRI.mp4',
+  '7. bölüm U12 İKSİRİ.mp4': '7.bolum.U12.IKSIRI.mp4',
+  '8. bölüm U12 İKSİRİ.mp4': '8.bolum.U12.IKSIRI.mp4',
+  '9. bölüm U12 İKSİRİ.mp4': '9.bolum.U12.IKSIRI.mp4',
+  '10. bölüm U12 İKSİRİ.mp4': '10.bolum.U12.IKSIRI.mp4',
 };
 
 function getRemoteAssetName(filename: string): string {

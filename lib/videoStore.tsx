@@ -36,7 +36,7 @@ interface BroadcastContextType {
 
 const BroadcastContext = createContext<BroadcastContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'sinyal_tv_videos_real_v4';
+const STORAGE_KEY = 'sinyal_tv_videos_real_v5';
 const OFFLINE_KEY = 'sinyal_tv_offline_mode';
 const WATERMARK_KEY = 'sinyal_tv_watermark';
 const FORCED_LIVE_KEY = 'sinyal_tv_forced_live';
