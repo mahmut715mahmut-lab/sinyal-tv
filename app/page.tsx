@@ -10,7 +10,7 @@ import { VideoGrid } from '@/components/VideoGrid';
 import { formatDuration } from '@/lib/broadcast';
 
 export default function HomePage() {
-  const { broadcastState, isOffline, videos } = useBroadcast();
+  const { broadcastState, isOffline, videos, advanceToNextLiveVideo } = useBroadcast();
 
   // Get upcoming 4 items for today's quick schedule strip
   const upcomingToday = broadcastState.scheduleTimeline
@@ -53,6 +53,7 @@ export default function HomePage() {
               currentVideo={broadcastState.currentVideo}
               elapsedSeconds={broadcastState.elapsedSeconds}
               isLiveMode={true}
+              onEnded={advanceToNextLiveVideo}
               className="shadow-2xl"
             />
           </div>

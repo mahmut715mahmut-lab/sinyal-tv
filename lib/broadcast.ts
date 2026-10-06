@@ -192,3 +192,113 @@ export function getCurrentBroadcastState(
     scheduleTimeline: markedSchedule,
   };
 }
+
+export interface SeriesInfo {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  badge?: string;
+  episodes: Video[];
+}
+
+export function getSeriesCatalog(videos: Video[]): SeriesInfo[] {
+  // Sort all videos strictly by broadcastOrder first
+  const sorted = [...videos].sort((a, b) => a.broadcastOrder - b.broadcastOrder);
+
+  const u12 = sorted.filter(
+    (v) => v.id.startsWith('u12-') || v.title.toLowerCase().includes('u12')
+  );
+  const dahaAci = sorted.filter(
+    (v) => v.id.startsWith('daha-aci') || v.title.toLowerCase().includes('daha açı')
+  );
+  const sinyalDizi = sorted.filter(
+    (v) => v.id.startsWith('dizi-') || v.title.toLowerCase().includes('sinyal dizi')
+  );
+  const ozel = sorted.filter(
+    (v) => !u12.includes(v) && !dahaAci.includes(v) && !sinyalDizi.includes(v)
+  );
+
+  const list: SeriesInfo[] = [];
+
+  if (u12.length > 0) {
+    list.push({
+      id: 'u12-iksiri',
+      name: 'U12 İksiri',
+      category: 'DİZİ',
+      badge: `${u12.length} Bölüm • Sezon 1`,
+      description: 'Gizli formül, laboratuvar deneyleri ve hücresel dönüşümün 10 bölümlük eksiksiz serisi.',
+      episodes: u12,
+    });
+  }
+
+  if (dahaAci.length > 0) {
+    list.push({
+      id: 'daha-aci',
+      name: 'Daha Açı',
+      category: 'BELGESEL',
+      badge: `${dahaAci.length} Bölüm • Devam Ediyor`,
+      description: 'Geniş perspektif, derinlik ve açık deniz anlatısı sunan bağımsız belgesel serisi.',
+      episodes: dahaAci,
+    });
+  }
+
+  if (sinyalDizi.length > 0) {
+    list.push({
+      id: 'sinyal-dizi',
+      name: 'Sinyal Dizi',
+      category: 'DİZİ',
+      badge: `${sinyalDizi.length} Kurgu Bloğu • Sezon Finali`,
+      description: 'SİNYAL TV yapay zekâ evreninin ana kurgu anlatısı ve sezon finali.',
+      episodes: sinyalDizi,
+    });
+  }
+
+  if (ozel.length > 0) {
+    list.push({
+      id: 'ozel-yayinlar',
+      name: 'Özel Kuşaklar & Gece Yayını',
+      category: 'GECE YAYINI',
+      badge: `${ozel.length} Yayın`,
+      description: 'Gece yayınına özel dinamik kurgular ve tekil bağımsız gösterimler.',
+      episodes: ozel,
+    });
+  }
+
+  return list;
+}
+
+export function getSeriesForVideo(
+  video: Video,
+  allVideos: Video[]
+): {
+  series: SeriesInfo | null;
+  seriesEpisodes: Video[];
+  previousEpisode: Video | null;
+  nextEpisode: Video | null;
+  currentIndex: number;
+} {
+  const catalog = getSeriesCatalog(allVideos);
+  for (const s of catalog) {
+    const idx = s.episodes.findIndex((v) => v.id === video.id);
+    if (idx !== -1) {
+      return {
+        series: s,
+        seriesEpisodes: s.episodes,
+        previousEpisode: idx > 0 ? s.episodes[idx - 1] : null,
+        nextEpisode: idx < s.episodes.length - 1 ? s.episodes[idx + 1] : null,
+        currentIndex: idx,
+      };
+    }
+  }
+
+  const sorted = [...allVideos].sort((a, b) => a.broadcastOrder - b.broadcastOrder);
+  const idx = sorted.findIndex((v) => v.id === video.id);
+  return {
+    series: null,
+    seriesEpisodes: sorted,
+    previousEpisode: idx > 0 ? sorted[idx - 1] : null,
+    nextEpisode: idx < sorted.length - 1 ? sorted[idx + 1] : null,
+    currentIndex: idx,
+  };
+}

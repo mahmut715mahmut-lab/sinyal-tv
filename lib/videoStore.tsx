@@ -32,6 +32,7 @@ interface BroadcastContextType {
   setIsSearchOpen: (open: boolean) => void;
   analytics: AnalyticsStats;
   incrementDownloadCount: () => void;
+  advanceToNextLiveVideo: () => void;
 }
 
 const BroadcastContext = createContext<BroadcastContextType | undefined>(undefined);
@@ -272,6 +273,14 @@ export const BroadcastProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     });
   }, []);
 
+  const advanceToNextLiveVideo = useCallback(() => {
+    if (broadcastState.nextVideo) {
+      if (forcedLiveVideoId) {
+        forceLiveNow(broadcastState.nextVideo.id);
+      }
+    }
+  }, [broadcastState.nextVideo, forcedLiveVideoId]);
+
   const resetToDefaults = useCallback(() => {
     setVideos(initialVideos);
     setIsOfflineState(false);
@@ -344,6 +353,7 @@ export const BroadcastProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setIsSearchOpen,
         analytics,
         incrementDownloadCount,
+        advanceToNextLiveVideo,
       }}
     >
       {children}

@@ -13,14 +13,15 @@ interface VideoGridProps {
   showFilters?: boolean;
 }
 
-const CATEGORIES: VideoCategory[] = [
-  'TÜMÜ',
-  'BELGESEL',
-  'DİZİ',
-  'KISA FİLM',
-  'GECE YAYINI',
-  'DENEYSEL',
-  'ÖZEL',
+const FILTER_ITEMS = [
+  { id: 'TÜMÜ', label: 'TÜMÜ' },
+  { id: 'U12 İKSİRİ', label: '🧪 U12 İKSİRİ (1-10)' },
+  { id: 'DAHA AÇI', label: '📹 DAHA AÇI (1-3)' },
+  { id: 'SİNYAL DİZİ', label: '🎬 SİNYAL DİZİ' },
+  { id: 'DİZİ', label: 'DİZİ' },
+  { id: 'BELGESEL', label: 'BELGESEL' },
+  { id: 'GECE YAYINI', label: 'GECE KUŞAĞI' },
+  { id: 'ÖZEL', label: 'ÖZEL' },
 ];
 
 export const VideoGrid: React.FC<VideoGridProps> = ({
@@ -30,24 +31,32 @@ export const VideoGrid: React.FC<VideoGridProps> = ({
   initialCategory = 'TÜMÜ',
   showFilters = true,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<VideoCategory>(initialCategory);
-  const [sortBy, setSortBy] = useState<'newest' | 'duration' | 'title'>('newest');
+  const [selectedCategory, setSelectedCategory] = useState<VideoCategory | string>(initialCategory);
+  const [sortBy, setSortBy] = useState<'order' | 'newest' | 'duration' | 'title'>('order');
 
   const filteredVideos = useMemo(() => {
     let list = [...videos];
 
-    // Filter by category
-    if (selectedCategory !== 'TÜMÜ') {
+    // Filter by category or series
+    if (selectedCategory === 'U12 İKSİRİ') {
+      list = list.filter((v) => v.id.startsWith('u12-') || v.title.toLowerCase().includes('u12'));
+    } else if (selectedCategory === 'DAHA AÇI') {
+      list = list.filter((v) => v.id.startsWith('daha-aci') || v.title.toLowerCase().includes('daha açı'));
+    } else if (selectedCategory === 'SİNYAL DİZİ') {
+      list = list.filter((v) => v.id.startsWith('dizi-') || v.title.toLowerCase().includes('sinyal dizi'));
+    } else if (selectedCategory !== 'TÜMÜ') {
       list = list.filter((v) => v.category === selectedCategory);
     }
 
-    // Sort
-    if (sortBy === 'newest') {
-      list.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
+    // Sort: default is strict sequential episode/broadcast order (1, 2, 3...)
+    if (sortBy === 'order') {
+      list.sort((a, b) => a.broadcastOrder - b.broadcastOrder);
+    } else if (sortBy === 'newest') {
+      list.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime() || a.broadcastOrder - b.broadcastOrder);
     } else if (sortBy === 'duration') {
       list.sort((a, b) => b.duration - a.duration);
     } else if (sortBy === 'title') {
-      list.sort((a, b) => a.title.localeCompare(b.title, 'tr'));
+      list.sort((a, b) => a.title.localeCompare(b.title, 'tr', { numeric: true }));
     }
 
     return list;
@@ -74,19 +83,19 @@ export const VideoGrid: React.FC<VideoGridProps> = ({
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-2">
           {/* Horizontal scrollable category pill list */}
           <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1.5 md:pb-0 scrollbar-none">
-            {CATEGORIES.map((cat) => {
-              const active = selectedCategory === cat;
+            {FILTER_ITEMS.map((item) => {
+              const active = selectedCategory === item.id;
               return (
                 <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  key={item.id}
+                  onClick={() => setSelectedCategory(item.id)}
                   className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium whitespace-nowrap transition-colors cursor-pointer ${
                     active
                       ? 'bg-zinc-100 text-zinc-950 font-bold shadow-sm'
                       : 'bg-[#141416] hover:bg-[#1E1E22] text-zinc-400 hover:text-zinc-200 border border-[#27272A]'
                   }`}
                 >
-                  {cat}
+                  {item.label}
                 </button>
               );
             })}
@@ -99,11 +108,12 @@ export const VideoGrid: React.FC<VideoGridProps> = ({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-[#141416] border border-[#27272A] rounded px-2 py-1 text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 cursor-pointer"
+              className="bg-[#141416] border border-[#27272A] rounded px-2.5 py-1 text-xs text-zinc-200 focus:outline-none focus:border-zinc-500 cursor-pointer font-mono"
             >
+              <option value="order">Bölüm & Akış Sırası (1, 2, 3...)</option>
+              <option value="title">Bölüm Adına Göre Sıralı</option>
               <option value="newest">En Yeni Eklenenler</option>
               <option value="duration">En Uzun Süreli</option>
-              <option value="title">Alfabetik (A-Z)</option>
             </select>
           </div>
         </div>
