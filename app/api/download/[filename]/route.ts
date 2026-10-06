@@ -11,6 +11,7 @@ const EXACT_ASSET_MAP: Record<string, string> = {
   '6-7-8-9-10bölümler.mp4': '6-7-8-9-10bolumler.mp4',
   'ajanlar vs sigmalar.mp4': 'ajanlar.vs.sigmalar.mp4',
   'daha açı 2. bölüm.mp4': 'daha.aci.2.bolum.mp4',
+  'daha açı 3. bölüm.mp4': 'daha.aci.3.bolum.mp4',
   'editli 1 2 3 4 5 bölümler diva.mp4': 'editli.1.2.3.4.5.bolumler.diva.mp4',
   'FİNAL.mp4': 'FINAL.mp4',
   'FINAL.mp4': 'FINAL.mp4',
